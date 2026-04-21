@@ -8,7 +8,7 @@ export default function SubmitPage() {
       <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-4">
           <div className="min-w-0">
-            <div className="text-base font-semibold text-slate-900 dark:text-slate-100">Submit wisdom</div>
+            <div className="text-base font-semibold text-slate-900 dark:text-slate-100">Share your wisdom...</div>
             <div className="text-xs text-slate-600 dark:text-slate-400">
               Add a story so others don’t have to suffer alone.
             </div>

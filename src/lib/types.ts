@@ -16,8 +16,8 @@ export type Submission = {
   tags: TopicTag[];
   createdAt: string; // ISO
   authorName: string;
-  contactEmail?: string;
-  contactPhone?: string;
+  authorEmail: string;
+  shareEmail: boolean;
 };
 
 export type SortMode = "recent" | "likes";

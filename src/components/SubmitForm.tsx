@@ -6,16 +6,12 @@ import type { TopicTag } from "@/lib/types";
 import { TOPIC_LABEL, TOPIC_TAGS } from "@/lib/topics";
 import { recommendTags } from "@/lib/tagging";
 
-function normalizePhone(value: string): string {
-  return value.replace(/[^\d+()-\s]/g, "").trim();
-}
-
 export function SubmitForm() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [contactPhone, setContactPhone] = useState("");
+  const [authorEmail, setAuthorEmail] = useState("");
+  const [shareEmail, setShareEmail] = useState(false);
   const [tags, setTags] = useState<TopicTag[]>(["building confidence"]);
   const [autoRecommended, setAutoRecommended] = useState<TopicTag[]>(["building confidence"]);
   const [notice, setNotice] = useState<string | null>(null);
@@ -25,9 +21,10 @@ export function SubmitForm() {
       title.trim().length >= 6 &&
       body.trim().length >= 80 &&
       authorName.trim().length >= 2 &&
+      authorEmail.trim().includes("@") &&
       tags.length >= 1
     );
-  }, [title, body, authorName, tags.length]);
+  }, [title, body, authorName, authorEmail, tags.length]);
 
   useEffect(() => {
     const rec = recommendTags({ title, body });
@@ -45,8 +42,7 @@ export function SubmitForm() {
 
   function onSubmit() {
     setNotice(null);
-    const trimmedEmail = contactEmail.trim();
-    const trimmedPhone = normalizePhone(contactPhone);
+    const trimmedEmail = authorEmail.trim();
 
     fetch("/api/submissions", {
       method: "POST",
@@ -56,8 +52,8 @@ export function SubmitForm() {
         body: body.trim(),
         tags,
         authorName: authorName.trim(),
-        contactEmail: trimmedEmail || undefined,
-        contactPhone: trimmedPhone || undefined
+        authorEmail: trimmedEmail,
+        shareEmail
       })
     })
       .then(async (res) => {
@@ -69,8 +65,8 @@ export function SubmitForm() {
         setTitle("");
         setBody("");
         setAuthorName("");
-        setContactEmail("");
-        setContactPhone("");
+        setAuthorEmail("");
+        setShareEmail(false);
         setTags(["building confidence"]);
       })
       .catch((e: unknown) => {
@@ -79,10 +75,10 @@ export function SubmitForm() {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="text-lg font-semibold text-slate-900">Submit wisdom</div>
-      <div className="mt-1 text-sm text-slate-600">
-        Share what helped you—specific, kind, and practical. Contact info is optional.
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+      <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">Submit wisdom</div>
+      <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        Share what helped you—specific, kind, and practical. Email is required; sharing it is optional.
       </div>
 
       {notice && (
@@ -93,67 +89,66 @@ export function SubmitForm() {
 
       <div className="mt-5 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-800">Title</label>
+          <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">Title</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-slate-300 focus:ring-2"
-            placeholder="Ex: ‘Office hours became a debugging session’"
+            className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-slate-300 focus:ring-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-700"
+            placeholder="Ex: ‘How I got over my fear of office hours’"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-800">Your story / wisdom</label>
+          <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">
+            Your story / wisdom
+          </label>
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            className="mt-1 min-h-[180px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm leading-6 outline-none ring-slate-300 focus:ring-2"
+            className="mt-1 min-h-[180px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm leading-6 text-slate-900 outline-none ring-slate-300 focus:ring-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-700"
             placeholder="2–3 paragraphs is perfect. What happened, what changed, what you’d tell someone else…"
           />
-          <div className="mt-1 text-xs text-slate-500">Aim for 80+ characters.</div>
+          <div className="mt-1 text-xs text-slate-500 dark:text-slate-500">Aim for 80+ characters.</div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-slate-800">Name</label>
+            <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">Name</label>
             <input
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-slate-300 focus:ring-2"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-slate-300 focus:ring-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-700"
               placeholder="First name + last initial is fine"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-800">Optional contact</label>
+            <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">
+              Email (required)
+            </label>
             <div className="mt-1 grid gap-2">
               <input
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-slate-300 focus:ring-2"
-                placeholder="Email (optional)"
+                value={authorEmail}
+                onChange={(e) => setAuthorEmail(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-slate-300 focus:ring-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-700"
+                placeholder="you@school.edu"
               />
-              <input
-                value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-slate-300 focus:ring-2"
-                placeholder="Phone (optional)"
-              />
+              <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={shareEmail}
+                  onChange={(e) => setShareEmail(e.target.checked)}
+                />
+                Share my email?
+              </label>
             </div>
           </div>
         </div>
 
         <div>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <label className="block text-sm font-medium text-slate-800">Tags</label>
-            <button
-              type="button"
-              onClick={applyRecommended}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100"
-            >
-              Use recommended
-            </button>
+            <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">Tags</label>
           </div>
-          <div className="mt-1 text-xs text-slate-600">
+          <div className="mt-1 text-xs text-slate-600 dark:text-slate-400">
             Recommended:{" "}
             <span className="font-semibold">
               {autoRecommended.map((t) => TOPIC_LABEL[t]).join(", ")}
@@ -170,8 +165,8 @@ export function SubmitForm() {
                   onClick={() => toggleTag(t)}
                   className={`flex items-center justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${
                     checked
-                      ? "border-sky-200 bg-sky-50 text-sky-900"
-                      : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"
+                      ? "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900/40 dark:bg-sky-950/30 dark:text-sky-200"
+                      : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                   }`}
                   aria-pressed={checked}
                 >
@@ -181,7 +176,7 @@ export function SubmitForm() {
               );
             })}
           </div>
-          <div className="mt-2 text-xs text-slate-500">Pick 1–3 tags.</div>
+          <div className="mt-2 text-xs text-slate-500 dark:text-slate-500">Pick 1–3 tags.</div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -189,21 +184,16 @@ export function SubmitForm() {
             type="button"
             onClick={onSubmit}
             disabled={!canSubmit}
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-100 dark:text-slate-900"
           >
             Save submission
           </button>
           <Link
             href="/"
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             Back to map
           </Link>
-        </div>
-
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
-          This app saves submissions to Vercel Postgres. Seed data is inserted automatically when the
-          database is empty.
         </div>
       </div>
     </div>

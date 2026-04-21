@@ -17,9 +17,9 @@ export default function HomePage() {
       <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div className="min-w-0">
-            <div className="text-base font-semibold text-slate-900 dark:text-slate-100">Pain Wiki</div>
+            <div className="text-base font-semibold text-slate-900 dark:text-slate-100">The Pain Wiki.</div>
             <div className="text-xs text-slate-600 dark:text-slate-400">
-              Community wisdom for profs, students, and alumni — scaled.
+              Real stories. Practical advice. Shared forward.
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -28,7 +28,7 @@ export default function HomePage() {
               href="/submit"
               className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
             >
-              Submit wisdom
+              Share your wisdom
             </Link>
           </div>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import type { TopicTag } from "@/lib/types";
 import { TOPIC_LABEL, TOPIC_TAGS } from "@/lib/topics";
 
@@ -50,17 +49,9 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Thought map</div>
-          <div className="text-xs text-slate-600 dark:text-slate-400">
-            Click a topic node to filter submissions.
-          </div>
+          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Filter by topic...</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400">Click a topic below to find the gems & stories that can help you on your path.</div>
         </div>
-        <Link
-          className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-          href="/submit"
-        >
-          Submit wisdom
-        </Link>
       </div>
 
       <div className="mb-4">

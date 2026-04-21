@@ -39,8 +39,8 @@ export async function POST(req: Request) {
       body?: unknown;
       tags?: unknown;
       authorName?: unknown;
-      contactEmail?: unknown;
-      contactPhone?: unknown;
+      authorEmail?: unknown;
+      shareEmail?: unknown;
     };
 
     const title = typeof b.title === "string" ? b.title.trim() : "";
@@ -52,8 +52,8 @@ export async function POST(req: Request) {
         ? (b.tags as TopicTag[])
         : ([] as TopicTag[]);
 
-    const contactEmail = typeof b.contactEmail === "string" ? b.contactEmail.trim() : "";
-    const contactPhone = typeof b.contactPhone === "string" ? b.contactPhone.trim() : "";
+    const authorEmail = typeof b.authorEmail === "string" ? b.authorEmail.trim() : "";
+    const shareEmail = Boolean(b.shareEmail);
 
     if (title.length < 6) return NextResponse.json({ error: "Title too short" }, { status: 400 });
     if (story.length < 80) return NextResponse.json({ error: "Story too short" }, { status: 400 });
@@ -61,14 +61,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Name too short" }, { status: 400 });
     if (tags.length < 1)
       return NextResponse.json({ error: "Pick at least 1 tag" }, { status: 400 });
+    if (!authorEmail || !authorEmail.includes("@"))
+      return NextResponse.json({ error: "Valid email required" }, { status: 400 });
 
     const created = await createSubmission({
       title,
       body: story,
       tags,
       authorName,
-      contactEmail: contactEmail || undefined,
-      contactPhone: contactPhone || undefined
+      authorEmail,
+      shareEmail
     });
 
     return NextResponse.json({ ok: true, id: created.id, createdAt: created.createdAt });

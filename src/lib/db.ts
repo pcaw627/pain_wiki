@@ -17,6 +17,15 @@ export async function ensureSchema() {
     );
   `);
 
+  // Migrations toward: author_email (required), share_email (per-post opt-in)
+  await query(`alter table submissions add column if not exists author_email text;`);
+  await query(`alter table submissions add column if not exists share_email boolean not null default false;`);
+  await query(`
+    update submissions
+    set author_email = coalesce(author_email, contact_email)
+    where author_email is null;
+  `);
+
   await query(`
     create table if not exists submission_tags (
       submission_id text not null references submissions(id) on delete cascade,
@@ -45,7 +54,7 @@ export async function ensureSeedData() {
   for (const s of seeds) {
     await query(
       `
-      insert into submissions (id, title, body, author_name, contact_email, contact_phone, created_at)
+      insert into submissions (id, title, body, author_name, author_email, share_email, created_at)
       values ($1, $2, $3, $4, $5, $6, $7::timestamptz)
       on conflict (id) do nothing;
     `,
@@ -54,8 +63,8 @@ export async function ensureSeedData() {
         s.title,
         s.body,
         s.authorName,
-        s.contactEmail ?? null,
-        s.contactPhone ?? null,
+        s.authorEmail,
+        s.shareEmail,
         s.createdAt
       ]
     );
@@ -103,8 +112,8 @@ export async function listSubmissions(params: {
     title: string;
     body: string;
     author_name: string;
-    contact_email: string | null;
-    contact_phone: string | null;
+    author_email: string | null;
+    share_email: boolean;
     created_at: string;
     likes: number;
     tags: string[];
@@ -115,8 +124,8 @@ export async function listSubmissions(params: {
       s.title,
       s.body,
       s.author_name,
-      s.contact_email,
-      s.contact_phone,
+      s.author_email,
+      s.share_email,
       s.created_at,
       coalesce(l.likes_count, 0) as likes,
       coalesce(array_agg(st.tag) filter (where st.tag is not null), '{}') as tags
@@ -148,8 +157,8 @@ export async function listSubmissions(params: {
     tags: (r.tags ?? []) as TopicTag[],
     createdAt: new Date(r.created_at).toISOString(),
     authorName: r.author_name,
-    contactEmail: r.contact_email ?? undefined,
-    contactPhone: r.contact_phone ?? undefined,
+    authorEmail: r.author_email ?? "",
+    shareEmail: r.share_email ?? false,
     likes: r.likes ?? 0
   }));
 }
@@ -159,8 +168,8 @@ export async function createSubmission(input: {
   body: string;
   tags: TopicTag[];
   authorName: string;
-  contactEmail?: string;
-  contactPhone?: string;
+  authorEmail: string;
+  shareEmail: boolean;
 }) {
   await ensureSeedData();
 
@@ -170,7 +179,7 @@ export async function createSubmission(input: {
 
   await query(
     `
-    insert into submissions (id, title, body, author_name, contact_email, contact_phone, created_at)
+    insert into submissions (id, title, body, author_name, author_email, share_email, created_at)
     values ($1, $2, $3, $4, $5, $6, $7::timestamptz);
   `,
     [
@@ -178,8 +187,8 @@ export async function createSubmission(input: {
       input.title,
       input.body,
       input.authorName,
-      input.contactEmail ?? null,
-      input.contactPhone ?? null,
+      input.authorEmail,
+      input.shareEmail,
       createdAt
     ]
   );

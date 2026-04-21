@@ -141,19 +141,17 @@ export function SubmissionList({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-            Submissions{" "}
+            Gems & Stories{" "}
             <span className="font-normal text-slate-500 dark:text-slate-400">
               ({shown.length}
               {selectedTopic ? ` in ${TOPIC_LABEL[selectedTopic]}` : ""}
               {query.trim() ? ` matching “${query.trim()}”` : ""})
             </span>
           </div>
-          <div className="text-xs text-slate-600 dark:text-slate-400">
-            Sort, like, and click tags to explore.
-          </div>
         </div>
 
         <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Sort by…</span>
           <button
             type="button"
             onClick={() => onSortModeChange("recent")}
@@ -202,7 +200,7 @@ export function SubmissionList({
           <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
             No matches yet. Try a different search or topic, or{" "}
             <Link className="font-semibold underline" href="/submit">
-              submit wisdom
+              share your wisdom...
             </Link>
             .
           </div>

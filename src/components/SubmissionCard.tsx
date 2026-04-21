@@ -16,6 +16,7 @@ export function SubmissionCard({
   onToggleLike: () => void;
   onTagClick: (tag: TopicTag) => void;
 }) {
+  const firstName = submission.authorName.trim().split(/\s+/)[0] || submission.authorName;
   const created = new Date(submission.createdAt);
   const createdLabel = Number.isNaN(created.getTime())
     ? submission.createdAt
@@ -53,6 +54,16 @@ export function SubmissionCard({
         {submission.body}
       </div>
 
+      {submission.shareEmail && submission.authorEmail && (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+          If you want to reach out to {firstName} and ask more, contact them via{" "}
+          <a className="font-semibold underline" href={`mailto:${submission.authorEmail}`}>
+            {submission.authorEmail}
+          </a>
+          .
+        </div>
+      )}
+
       <div className="mt-3 flex flex-wrap gap-2">
         {submission.tags.map((t) => (
           <button
@@ -65,23 +76,6 @@ export function SubmissionCard({
           </button>
         ))}
       </div>
-
-      {(submission.contactEmail || submission.contactPhone) && (
-        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
-          <div className="font-semibold text-slate-800 dark:text-slate-100">Optional contact</div>
-          <div className="mt-1 space-y-1">
-            {submission.contactEmail && (
-              <div>
-                Email:{" "}
-                <a className="font-medium underline" href={`mailto:${submission.contactEmail}`}>
-                  {submission.contactEmail}
-                </a>
-              </div>
-            )}
-            {submission.contactPhone && <div>Phone: {submission.contactPhone}</div>}
-          </div>
-        </div>
-      )}
     </article>
   );
 }
