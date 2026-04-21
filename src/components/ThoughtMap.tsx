@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { TopicTag } from "@/lib/types";
 import { TOPIC_LABEL, TOPIC_TAGS } from "@/lib/topics";
 
@@ -40,9 +40,50 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
     return { center: centerNode, topics: topicNodes, radius: r };
   }, []);
 
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
+
   function toggleTopic(t: TopicTag | null) {
     if (!t) return onSelectTopic(null);
     onSelectTopic(selectedTopic === t ? null : t);
+  }
+
+  function setMouseFromEvent(e: React.MouseEvent<SVGSVGElement>) {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 440;
+    const y = ((e.clientY - rect.top) / rect.height) * 440;
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => setMouse({ x, y }));
+  }
+
+  function clearMouse() {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+    setMouse(null);
+  }
+
+  function nodeTransform(node: Node) {
+    if (!mouse) return "";
+    const dx = mouse.x - node.x;
+    const dy = mouse.y - node.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // influence: 0..1 within radius
+    const influenceRadius = 140;
+    const t = Math.max(0, Math.min(1, 1 - dist / influenceRadius));
+    if (t <= 0) return "";
+
+    // pull a few px toward cursor + a subtle scale
+    const pull = 10 * t;
+    const ux = dx / (dist || 1);
+    const uy = dy / (dist || 1);
+    const tx = ux * pull;
+    const ty = uy * pull;
+    const scale = 1 + 0.08 * t;
+    return `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(3)})`;
   }
 
   return (
@@ -80,7 +121,13 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
         </div>
       </div>
 
-      <svg viewBox="0 0 440 440" className="h-[440px] w-full">
+      <svg
+        ref={svgRef}
+        viewBox="0 0 440 440"
+        className="h-[440px] w-full"
+        onMouseMove={setMouseFromEvent}
+        onMouseLeave={clearMouse}
+      >
         {/* edges */}
         {topics.map((t) => (
           <line
@@ -130,6 +177,7 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
         {/* topic nodes */}
         {topics.map((t) => {
           const isSelected = t.topic === selectedTopic;
+          const transform = nodeTransform(t);
           return (
             <g
               key={t.id}
@@ -140,13 +188,14 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
                 if (e.key === "Enter" || e.key === " ") toggleTopic(t.topic ?? null);
               }}
               className="cursor-pointer focus:outline-none focus-visible:outline-none"
+              transform={transform || undefined}
             >
               {/* selection outline (behind text) */}
               {isSelected && (
                 <circle
                   cx={t.x}
                   cy={t.y}
-                  r={38}
+                  r={42}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -156,7 +205,7 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
               <circle
                 cx={t.x}
                 cy={t.y}
-                r={32}
+                r={36}
                 fill={isSelected ? "#e0f2fe" : "#ffffff"}
                 stroke="currentColor"
                 strokeWidth={2}
