@@ -8,20 +8,20 @@ import { TOPIC_LABEL } from "@/lib/topics";
 
 type LikesState = {
   countsById: Record<string, number>;
-  likedByMe: Record<string, true>;
+  likedByMe: Record<string, boolean>;
 };
 
-function loadLikedByMe(): Record<string, true> {
+function loadLikedByMe(): Record<string, boolean> {
   if (typeof window === "undefined") return {};
   try {
     return (JSON.parse(window.localStorage.getItem("pain_wiki:liked_by_me:v1") ?? "{}") ??
-      {}) as Record<string, true>;
+      {}) as Record<string, boolean>;
   } catch {
     return {};
   }
 }
 
-function saveLikedByMe(next: Record<string, true>) {
+function saveLikedByMe(next: Record<string, boolean>) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem("pain_wiki:liked_by_me:v1", JSON.stringify(next));
 }
