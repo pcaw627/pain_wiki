@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import type { TopicTag } from "@/lib/types";
 import { TOPIC_LABEL, TOPIC_TAGS } from "@/lib/topics";
 
@@ -49,12 +50,12 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
             Click a topic node to filter submissions.
           </div>
         </div>
-        <a
+        <Link
           className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-100"
           href="/submit"
         >
           Submit wisdom
-        </a>
+        </Link>
       </div>
 
       <div className="mb-4">

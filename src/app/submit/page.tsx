@@ -1,4 +1,5 @@
 import { SubmitForm } from "@/components/SubmitForm";
+import Link from "next/link";
 
 export default function SubmitPage() {
   return (
@@ -9,12 +10,12 @@ export default function SubmitPage() {
             <div className="text-base font-semibold text-slate-900">Submit wisdom</div>
             <div className="text-xs text-slate-600">Add a story so others don’t have to suffer alone.</div>
           </div>
-          <a
+          <Link
             href="/"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
           >
             Back to map
-          </a>
+          </Link>
         </div>
       </header>
 

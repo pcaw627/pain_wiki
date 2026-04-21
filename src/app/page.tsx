@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { SortMode, TopicTag } from "@/lib/types";
 import { ThoughtMap } from "@/components/ThoughtMap";
 import { SubmissionList } from "@/components/SubmissionList";
@@ -20,12 +21,12 @@ export default function HomePage() {
               Community wisdom for profs, students, and alumni — scaled.
             </div>
           </div>
-          <a
+          <Link
             href="/submit"
             className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
           >
             Submit wisdom
-          </a>
+          </Link>
         </div>
       </header>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import type { TopicTag } from "@/lib/types";
 import { TOPIC_LABEL, TOPIC_TAGS } from "@/lib/topics";
 import { recommendTags } from "@/lib/tagging";
@@ -32,7 +33,7 @@ export function SubmitForm() {
     const rec = recommendTags({ title, body });
     setAutoRecommended(rec);
     if (tags.length === 0) setTags(rec);
-  }, [title, body]); // intentionally not depending on tags
+  }, [title, body, tags.length]);
 
   function toggleTag(t: TopicTag) {
     setTags((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
@@ -192,12 +193,12 @@ export function SubmitForm() {
           >
             Save submission
           </button>
-          <a
+          <Link
             href="/"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
           >
             Back to map
-          </a>
+          </Link>
         </div>
 
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">

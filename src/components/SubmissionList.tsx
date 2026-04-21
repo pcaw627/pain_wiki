@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import type { SortMode, Submission, TopicTag } from "@/lib/types";
 import { SubmissionCard } from "./SubmissionCard";
 import { TOPIC_LABEL } from "@/lib/topics";
@@ -184,9 +185,9 @@ export function SubmissionList({
         ) : shown.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
             No matches yet. Try a different search or topic, or{" "}
-            <a className="font-semibold underline" href="/submit">
+            <Link className="font-semibold underline" href="/submit">
               submit wisdom
-            </a>
+            </Link>
             .
           </div>
         ) : (
