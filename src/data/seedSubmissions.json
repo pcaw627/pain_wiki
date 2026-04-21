@@ -1,0 +1,75 @@
+[
+  {
+    "id": "seed-001",
+    "title": "My professor’s ‘one good question’ rule changed everything",
+    "body": "I used to leave office hours feeling embarrassed because I didn’t know how to ‘sound smart.’ A professor told me to come in with one good question, not a perfect understanding. I started writing down the exact sentence where my brain went foggy, and I’d bring that single line to office hours.\n\nOver time, I realized office hours isn’t a performance—it’s a debugging session. The best moments were when I admitted what I tried and where it broke. That honesty made the conversation faster, and I stopped interpreting confusion as a personal flaw. My grades improved, but more importantly, I stopped dreading asking for help.",
+    "tags": ["academics", "building confidence"],
+    "createdAt": "2026-03-02T18:15:00.000Z",
+    "authorName": "Ariana M."
+  },
+  {
+    "id": "seed-002",
+    "title": "I thought ‘initiative’ meant doing more—really it meant closing loops",
+    "body": "In my first internship I tried to prove myself by taking on extra tasks. I was busy, but my manager kept asking for status. A senior engineer told me to treat every task like a loop: clarify the goal, post a small plan, share progress, and close with a link to what changed.\n\nWhen I started doing that, the same amount of work looked twice as impactful. People trusted me because they didn’t have to chase me. The lesson wasn’t ‘work harder,’ it was ‘make your work legible.’ Once I learned that, taking initiative felt calmer, not frantic.",
+    "tags": ["impact/initiative", "building trust"],
+    "createdAt": "2026-02-12T14:40:00.000Z",
+    "authorName": "Jordan L."
+  },
+  {
+    "id": "seed-003",
+    "title": "I stopped losing arguments by switching from ‘win’ to ‘understand’",
+    "body": "I grew up in a house where whoever spoke the loudest ‘won.’ In college group projects, I’d bulldoze because I was scared the project would fail. The turning point was a friend telling me: ‘You’re right a lot, but people don’t feel heard around you.’\n\nNow I do a simple thing: before I respond, I summarize what I think the other person means, and ask if I got it right. It sounds slow, but it speeds everything up. Most conflict was actually mismatched assumptions. Once we aligned on the assumptions, the solution was obvious and no one needed to be loud.",
+    "tags": ["communication styles", "building trust"],
+    "createdAt": "2026-01-28T20:05:00.000Z",
+    "authorName": "Samira K."
+  },
+  {
+    "id": "seed-004",
+    "title": "Confidence wasn’t a feeling—it was a habit of keeping promises to myself",
+    "body": "I used to wait until I felt confident to apply for clubs and opportunities. I rarely felt ready, so I stayed small. A mentor told me to stop treating confidence as something I ‘earn’ and instead treat it like a byproduct of consistency.\n\nI started making tiny commitments I could actually keep: 20 minutes of practice, one email sent, one draft written. Each kept promise made the next one easier. After a month, I wasn’t magically fearless, but I trusted myself. That trust was the real confidence.",
+    "tags": ["building confidence", "building trust"],
+    "createdAt": "2026-02-20T09:10:00.000Z",
+    "authorName": "Diego P."
+  },
+  {
+    "id": "seed-005",
+    "title": "Public speaking got easier when I stopped trying to ‘act confident’",
+    "body": "I hated presentations because I felt like everyone could see I was nervous. I tried to hide it, which made me tense and robotic. A speaking coach gave me permission to be human: ‘You can say you’re excited and a little nervous. People will relax with you.’\n\nI also stopped memorizing. Instead, I built a talk like a path: a starting story, three anchors, and one ending takeaway. If I got lost, I’d jump to the next anchor. The weird part is that audiences remembered more, because I sounded like I meant it, not like I was reciting it.",
+    "tags": ["public speaking", "building confidence"],
+    "createdAt": "2026-03-15T16:30:00.000Z",
+    "authorName": "Priya S."
+  },
+  {
+    "id": "seed-006",
+    "title": "Leadership started when I asked ‘what would make this easier for you?’",
+    "body": "As a club officer I thought leadership meant having the best ideas. Meetings were chaotic and people disengaged. A staff advisor challenged me to stop pitching and start serving: ask members what blocks them, then remove the block.\n\nSo I started doing quick 1:1s and asking: ‘What would make this role easier?’ Often it was simple—templates, reminders, clearer definitions. Participation rose because people felt supported, not judged. Leadership wasn’t charisma; it was building a system where others could succeed.",
+    "tags": ["leadership", "impact/initiative"],
+    "createdAt": "2026-01-10T11:55:00.000Z",
+    "authorName": "Hannah R."
+  },
+  {
+    "id": "seed-007",
+    "title": "A hard decision got simpler when I wrote my ‘minimum acceptable life’",
+    "body": "I was deciding whether to switch majors and it felt like choosing a whole identity. Every option had pros and cons, and I kept spinning. A counselor asked me to define my minimum acceptable life: the smallest set of needs that must be true for me to be okay.\n\nWhen I wrote it down, I realized I was chasing prestige more than fit. I could meet my needs in multiple paths, so the decision became about which path I’d actually follow through on. I switched, and the relief came from clarity, not certainty.",
+    "tags": ["hard decisions", "academics"],
+    "createdAt": "2026-03-22T08:25:00.000Z",
+    "authorName": "Noah T."
+  },
+  {
+    "id": "seed-008",
+    "title": "Family pressure got lighter when I learned to ‘translate’ instead of argue",
+    "body": "My family didn’t understand what I was doing in college, and every call turned into an argument. I kept trying to convince them with details, but it only made them more anxious. A professor suggested I translate: don’t argue the facts, name the underlying value.\n\nSo I started saying things like, ‘I hear that you want stability. Here’s how I’m building it.’ That shifted the tone. They still worry sometimes, but we fight less because they feel respected. I learned that being understood often starts with understanding what the other person is protecting.",
+    "tags": ["family", "communication styles"],
+    "createdAt": "2026-02-05T19:00:00.000Z",
+    "authorName": "Leila A."
+  },
+  {
+    "id": "seed-009",
+    "title": "Trust is built in boring moments",
+    "body": "I used to think trust was something you earned with big gestures. In research, what actually mattered was the boring stuff: replying when you said you would, showing your work, and admitting uncertainty early.\n\nWhen I started sending short updates—what I tried, what I learned, and what I’d do next—my advisor stopped micromanaging. The relationship improved because there were no surprises. Trust wasn’t a vibe; it was a record of predictable behavior.",
+    "tags": ["building trust", "impact/initiative"],
+    "createdAt": "2026-01-18T13:20:00.000Z",
+    "authorName": "Mason C."
+  }
+]
+
