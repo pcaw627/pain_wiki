@@ -22,7 +22,7 @@ type Node = {
 
 export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange }: Props) {
   const { center, topics, radius } = useMemo(() => {
-    const r = 160;
+    const r = 165;
     const cx = 220;
     const cy = 220;
     const centerNode: Node = { id: "center", label: "Search", x: cx, y: cy };
@@ -41,17 +41,22 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
     return { center: centerNode, topics: topicNodes, radius: r };
   }, []);
 
+  function toggleTopic(t: TopicTag | null) {
+    if (!t) return onSelectTopic(null);
+    onSelectTopic(selectedTopic === t ? null : t);
+  }
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-sm font-semibold text-slate-900">Thought map</div>
-          <div className="text-xs text-slate-600">
+          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">Thought map</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400">
             Click a topic node to filter submissions.
           </div>
         </div>
         <Link
-          className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-100"
+          className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           href="/submit"
         >
           Submit wisdom
@@ -59,18 +64,18 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
       </div>
 
       <div className="mb-4">
-        <label className="block text-xs font-medium text-slate-700">Search</label>
+        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">Search</label>
         <input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Try “office hours”, “burnout”, “presentation”…"
-          className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-slate-300 focus:ring-2"
+          className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-slate-300 focus:ring-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-700"
         />
-        <div className="mt-2 flex items-center gap-2 text-xs text-slate-600">
+        <div className="mt-2 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
           <button
             type="button"
-            onClick={() => onSelectTopic(null)}
-            className="rounded-lg border border-slate-200 bg-white px-2 py-1 hover:bg-slate-50"
+            onClick={() => toggleTopic(null)}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-1 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
           >
             Clear topic
           </button>
@@ -84,7 +89,7 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
         </div>
       </div>
 
-      <svg viewBox="0 0 440 440" className="h-[420px] w-full">
+      <svg viewBox="0 0 440 440" className="h-[440px] w-full">
         {/* edges */}
         {topics.map((t) => (
           <line
@@ -93,8 +98,9 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
             y1={center.y}
             x2={t.x}
             y2={t.y}
-            stroke="#e2e8f0"
+            stroke="currentColor"
             strokeWidth="2"
+            className="text-slate-200 dark:text-slate-800"
           />
         ))}
 
@@ -104,28 +110,29 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
           cy={center.y}
           r={radius}
           fill="none"
-          stroke="#f1f5f9"
+          stroke="currentColor"
           strokeWidth="2"
+          className="text-slate-100 dark:text-slate-900"
         />
 
         {/* center node */}
         <g>
-          <circle cx={center.x} cy={center.y} r="56" fill="#0f172a" />
+          <circle cx={center.x} cy={center.y} r="54" className="fill-slate-900 dark:fill-slate-50" />
           <text
             x={center.x}
             y={center.y - 6}
             textAnchor="middle"
-            className="select-none fill-white text-[14px] font-semibold"
+            className="select-none fill-white text-[14px] font-semibold dark:fill-slate-900"
           >
-            Search
+            Find wisdom
           </text>
           <text
             x={center.x}
             y={center.y + 14}
             textAnchor="middle"
-            className="select-none fill-slate-200 text-[10px]"
+            className="select-none fill-slate-200 text-[10px] dark:fill-slate-600"
           >
-            community wisdom
+            about…
           </text>
         </g>
 
@@ -137,27 +144,42 @@ export function ThoughtMap({ selectedTopic, onSelectTopic, query, onQueryChange 
               key={t.id}
               role="button"
               tabIndex={0}
-              onClick={() => onSelectTopic(t.topic ?? null)}
+              onClick={() => toggleTopic(t.topic ?? null)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") onSelectTopic(t.topic ?? null);
+                if (e.key === "Enter" || e.key === " ") toggleTopic(t.topic ?? null);
               }}
-              className="cursor-pointer"
+              className="cursor-pointer focus:outline-none focus-visible:outline-none"
             >
+              {/* selection outline (behind text) */}
+              {isSelected && (
+                <circle
+                  cx={t.x}
+                  cy={t.y}
+                  r={38}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="text-sky-300/70 dark:text-sky-500/40"
+                />
+              )}
               <circle
                 cx={t.x}
                 cy={t.y}
-                r={36}
-                fill={isSelected ? "#0ea5e9" : "#ffffff"}
-                stroke={isSelected ? "#0284c7" : "#cbd5e1"}
-                strokeWidth={isSelected ? 3 : 2}
+                r={32}
+                fill={isSelected ? "#e0f2fe" : "#ffffff"}
+                stroke="currentColor"
+                strokeWidth={2}
+                className={
+                  isSelected
+                    ? "text-sky-200 dark:fill-slate-900 dark:text-slate-700"
+                    : "text-slate-300 dark:fill-slate-900 dark:text-slate-700"
+                }
               />
               <text
                 x={t.x}
                 y={t.y}
                 textAnchor="middle"
-                className={`select-none text-[10px] font-semibold ${
-                  isSelected ? "fill-white" : "fill-slate-800"
-                }`}
+                className="select-none fill-slate-800 text-[10px] font-semibold dark:fill-slate-200"
               >
                 {t.label}
               </text>

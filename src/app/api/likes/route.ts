@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { incrementLike } from "@/lib/db";
+import { decrementLike, incrementLike } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -14,7 +14,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing id" }, { status: 400 });
     }
 
-    const likes = await incrementLike(id.trim());
+    const action = (body as { action?: unknown }).action;
+    const normalizedAction = action === "unlike" ? "unlike" : "like";
+    const likes =
+      normalizedAction === "unlike" ? await decrementLike(id.trim()) : await incrementLike(id.trim());
     return NextResponse.json({ ok: true, likes });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Failed to like submission";

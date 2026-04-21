@@ -222,3 +222,18 @@ export async function incrementLike(submissionId: string) {
   return res.rows?.[0]?.likes_count ?? 0;
 }
 
+export async function decrementLike(submissionId: string) {
+  await ensureSeedData();
+  const res = await query<{ likes_count: number }>(
+    `
+    insert into submission_likes (submission_id, likes_count)
+    values ($1, 0)
+    on conflict (submission_id)
+    do update set likes_count = greatest(submission_likes.likes_count - 1, 0)
+    returning likes_count;
+  `,
+    [submissionId]
+  );
+  return res.rows?.[0]?.likes_count ?? 0;
+}
+

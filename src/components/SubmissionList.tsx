@@ -96,14 +96,19 @@ export function SubmissionList({
 
   const shown = useMemo(() => subs, [subs]);
 
-  async function likeOnce(id: string) {
-    if (likesState.likedByMe[id]) return;
+  async function toggleLike(id: string) {
+    const wasLiked = Boolean(likesState.likedByMe[id]);
 
     setLikesState((prev) => {
-      const nextLiked = { ...prev.likedByMe, [id]: true };
+      const nextLiked = { ...prev.likedByMe };
+      if (wasLiked) delete nextLiked[id];
+      else nextLiked[id] = true;
       saveLikedByMe(nextLiked);
       return {
-        countsById: { ...prev.countsById, [id]: (prev.countsById[id] ?? 0) + 1 },
+        countsById: {
+          ...prev.countsById,
+          [id]: Math.max(0, (prev.countsById[id] ?? 0) + (wasLiked ? -1 : 1))
+        },
         likedByMe: nextLiked
       };
     });
@@ -111,16 +116,20 @@ export function SubmissionList({
     const res = await fetch("/api/likes", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id })
+      body: JSON.stringify({ id, action: wasLiked ? "unlike" : "like" })
     });
     if (!res.ok) {
       // revert optimistic update on failure
       setLikesState((prev) => {
         const nextLiked = { ...prev.likedByMe };
-        delete nextLiked[id];
+        if (wasLiked) nextLiked[id] = true;
+        else delete nextLiked[id];
         saveLikedByMe(nextLiked);
         return {
-          countsById: { ...prev.countsById, [id]: Math.max(0, (prev.countsById[id] ?? 1) - 1) },
+          countsById: {
+            ...prev.countsById,
+            [id]: Math.max(0, (prev.countsById[id] ?? 0) + (wasLiked ? 1 : -1))
+          },
           likedByMe: nextLiked
         };
       });
@@ -128,17 +137,18 @@ export function SubmissionList({
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-sm font-semibold text-slate-900">
+          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Submissions{" "}
-            <span className="font-normal text-slate-500">
+            <span className="font-normal text-slate-500 dark:text-slate-400">
               ({shown.length}
-              {selectedTopic ? ` in ${TOPIC_LABEL[selectedTopic]}` : ""})
+              {selectedTopic ? ` in ${TOPIC_LABEL[selectedTopic]}` : ""}
+              {query.trim() ? ` matching “${query.trim()}”` : ""})
             </span>
           </div>
-          <div className="text-xs text-slate-600">
+          <div className="text-xs text-slate-600 dark:text-slate-400">
             Sort, like, and click tags to explore.
           </div>
         </div>
@@ -149,8 +159,8 @@ export function SubmissionList({
             onClick={() => onSortModeChange("recent")}
             className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${
               sortMode === "recent"
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"
+                ? "border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
             }`}
           >
             Recent
@@ -160,8 +170,8 @@ export function SubmissionList({
             onClick={() => onSortModeChange("likes")}
             className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${
               sortMode === "likes"
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"
+                ? "border-slate-900 bg-slate-900 text-white dark:border-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
             }`}
           >
             Likes
@@ -171,8 +181,14 @@ export function SubmissionList({
 
       <div className="mt-4 space-y-3">
         {loading ? (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
-            Loading…
+          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900">
+            <div className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
+              <div
+                className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600 dark:border-slate-700 dark:border-t-slate-200"
+                aria-hidden="true"
+              />
+              <span>Loading submissions…</span>
+            </div>
           </div>
         ) : loadError ? (
           <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
@@ -197,7 +213,7 @@ export function SubmissionList({
               submission={s as Submission}
               likes={likesState.countsById[s.id] ?? 0}
               likedByMe={Boolean(likesState.likedByMe[s.id])}
-              onToggleLike={() => likeOnce(s.id)}
+              onToggleLike={() => toggleLike(s.id)}
               onTagClick={(t) => onSelectTopic(t)}
             />
           ))

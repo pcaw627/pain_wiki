@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { SortMode, TopicTag } from "@/lib/types";
 import { ThoughtMap } from "@/components/ThoughtMap";
 import { SubmissionList } from "@/components/SubmissionList";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function HomePage() {
   const [selectedTopic, setSelectedTopic] = useState<TopicTag | null>(null);
@@ -12,21 +13,24 @@ export default function HomePage() {
   const [sortMode, setSortMode] = useState<SortMode>("recent");
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div className="min-w-0">
-            <div className="text-base font-semibold text-slate-900">Pain Wiki</div>
-            <div className="text-xs text-slate-600">
+            <div className="text-base font-semibold text-slate-900 dark:text-slate-100">Pain Wiki</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">
               Community wisdom for profs, students, and alumni — scaled.
             </div>
           </div>
-          <Link
-            href="/submit"
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-          >
-            Submit wisdom
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link
+              href="/submit"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+            >
+              Submit wisdom
+            </Link>
+          </div>
         </div>
       </header>
 
