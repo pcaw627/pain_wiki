@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { incrementLike } from "@/lib/db";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json().catch(() => null)) as unknown;

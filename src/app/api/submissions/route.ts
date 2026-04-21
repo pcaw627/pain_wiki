@@ -3,6 +3,8 @@ import type { SortMode, TopicTag } from "@/lib/types";
 import { createSubmission, listSubmissions } from "@/lib/db";
 import { TOPIC_TAGS } from "@/lib/topics";
 
+export const runtime = "nodejs";
+
 function isTopicTag(x: unknown): x is TopicTag {
   return typeof x === "string" && (TOPIC_TAGS as readonly string[]).includes(x);
 }
